@@ -29,21 +29,30 @@ VALIDATE(){
     fi
 }
 
-dnf module disable nginx -y
+dnf module disable nginx -y &>>$LOG_FILE
 VALIDATE $? "Disabling the Nginx"
 
-dnf module enable nginx:20 -y
+dnf module enable nginx:20 -y &>>$LOG_FILE
 VALIDATE $? "Enabling the Nginx"
 
-dnf install nginx -y
+dnf install nginx -y &>>$LOG_FILE
 VALIDATE $? "Installing the Nginx"
 
 rm -rf /usr/share/nginx/html/* 
-curl -o /tmp/frontend.zip https://roboshop-artifacts.s3.amazonaws.com/frontend-v3.zip
+VALIDATE $? "Removing the default content"
+
+curl -o /tmp/frontend.zip https://roboshop-artifacts.s3.amazonaws.com/frontend-v3.zip &>>$LOG_FILE
 VALIDATE $? "Downloading the Zip File"
 
 cd /usr/share/nginx/html 
 unzip /tmp/frontend.zip
-VALIDATE $? "Unzipping the file"
+VALIDATE $? "Unzipping the frontend"
 
-cp nginx.conf /etc/nginx/nginx.conf
+rm -rf /etc/nginx/nginx.conf &>>$LOG_FILE
+VALIDATE $? "Removing the default nginx config"
+
+cp $SCRIPT_DIR/nginx.conf /etc/nginx/nginx.conf
+VALIDATE $? "Copying the nginx conf"
+
+systemctl restart nginx &>>$LOG_FILE
+VALIDATE $? "Restarting the nginx service"

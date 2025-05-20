@@ -51,13 +51,15 @@ mkdir -p /app
 VALIDATE $? "Creating the /app directory "
 
 curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip &>>$LOG_FILE
-VALIDATE $? "Dowbloading the Zip File"
+VALIDATE $? "Downloading the Zip File"
 
 
 rm -rf /app/*
+VALIDATE $? "Removing the default content"
+
 cd /app 
 unzip /tmp/catalogue.zip
-VALIDATE $? "Unzipping the Catalogue"
+VALIDATE $? "Unzipping file"
 
 npm install &>>$LOG_FILE
 VALIDATE $? "Installing the dependencies"
