@@ -38,3 +38,12 @@ VALIDATE $? "Enabling the Nginx"
 dnf install nginx -y
 VALIDATE $? "Installing the Nginx"
 
+rm -rf /usr/share/nginx/html/* 
+curl -o /tmp/frontend.zip https://roboshop-artifacts.s3.amazonaws.com/frontend-v3.zip
+VALIDATE $? "Downloading the Zip File"
+
+cd /usr/share/nginx/html 
+unzip /tmp/frontend.zip
+VALIDATE $? "Unzipping the file"
+
+cp nginx.conf /etc/nginx/nginx.conf

@@ -81,3 +81,4 @@ then
     VALIDATE $? "Loading the data into MongoDB"
 else
     echo "Data is already loaded ... $Y SKIPPING $N"
+fi
