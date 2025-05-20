@@ -71,8 +71,13 @@ systemctl start catalogue
 VALIDATE $? "Starting the catalogue"
 
 cp $SCRIPT_DIR/mongo.repo /etc/yum.repos.d/mongo.repo
-dnf install mongodb-mongosh -y
+dnf install mongodb-mongosh -y &>>$LOG_FILE
 VALIDATE $? "Installing the mongodb Client"
 
-mongosh --host mongodb.pavithra.fun </app/db/master-data.js
-VALIDATE $? "Loading the data into MongoDB"
+STATUS=$(mongosh --host mongodb.pavithra.fun --eval 'db.getMongo().getDBNames().indexOf("catalogue")')
+if [ $STATUS -lt 0 ]
+then
+    mongosh --host mongodb.pavithra.fun </app/db/master-data.js &>>$LOG_FILE
+    VALIDATE $? "Loading the data into MongoDB"
+else
+    echo "Data is already loaded ... $Y SKIPPING $N"
