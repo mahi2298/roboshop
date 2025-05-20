@@ -18,7 +18,7 @@ do
     echo "$instance IP address is: $IP"
 
     aws route53 change-resource-record-sets \
-    --hosted-zone-id $zoneid \
+    --hosted-zone-id $HOSTED_ZONE_ID \
     --change-batch '
     {
         "Comment": "Creating a record set for cognito endpoint"
@@ -26,8 +26,8 @@ do
          "Action"              : "CREATE"
         ,"ResourceRecordSet"  : {
          "Name"                 : "'$instance'.'$DOMAIN_NAME'"
-         ,"Type"                : "CNAME"
-         ,"TTL"                 : 120
+         ,"Type"                : "A"
+         ,"TTL"                 : 1
          ,"ResourceRecords"     : [{
             "Value"             : "'$IP'"
         }]
