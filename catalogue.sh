@@ -44,7 +44,8 @@ VALIDATE $? "Creating the Roboshop user "
 mkdir /app
 VALIDATE $? "Creating the /app directory "
 
-curl -o "/tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip" &>>$LOG_FILE
+curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip &>>$LOG_FILE
+VALIDATE $? "Dowbloading the Zip File"
 cd /app 
 unzip /tmp/catalogue.zip
 VALIDATE $? "Unzipping the Catalogue"
