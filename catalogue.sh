@@ -60,3 +60,10 @@ systemctl daemon-reload
 systemctl enable catalogue &>>$LOG_FILE
 systemctl start catalogue
 VALIDATE $? "Starting the catalogue"
+
+cp $SCRIPT_DIR/mongo.repo /etc/yum.repos.d/mongo.repo
+dnf install mongodb-mongosh -y
+VALIDATE $? "Installing the mongodb Client"
+
+mongosh --host mongodb.pavithra.fun </app/db/master-data.js
+VALIDATE $? "Loading the data into MongoDB"
