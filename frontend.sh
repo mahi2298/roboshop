@@ -32,7 +32,7 @@ VALIDATE(){
 dnf module disable nginx -y &>>$LOG_FILE
 VALIDATE $? "Disabling the Nginx"
 
-dnf module enable nginx:20 -y &>>$LOG_FILE
+dnf module enable nginx:1.24 -y &>>$LOG_FILE
 VALIDATE $? "Enabling the Nginx"
 
 dnf install nginx -y &>>$LOG_FILE
