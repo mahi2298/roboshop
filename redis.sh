@@ -29,17 +29,20 @@ VALIDATE(){
     fi
 }
 
-dnf module disable redis -y
+dnf module disable redis -y &>>$LOG_FILE
 VALIDATE $? "Disabling the redis"
 
-dnf module enable redis:7 -y
+dnf module enable redis:7 -y &>>$LOG_FILE
 VALIDATE $? "Enabling the redis"
 
-dnf install redis -y
+dnf install redis -y &>>$LOG_FILE
 VALIDATE $? "Installing the redis"
 
-systemctl enable redis 
+systemctl enable redis &>>$LOG_FILE
 VALIDATE $? "Enabling the redis"
 
-systemctl start redis 
+
+sed -i 's/127.0.0.1/0.0.0.0/g' /etc/redis/redis.conf
+sed -i 's/protectedmode:yes/protectedmode:no/g' /etc/redis/redis.conf
+systemctl start redis &>>$LOG_FILE
 VALIDATE $? "Starting the redis"
