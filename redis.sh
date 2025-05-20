@@ -38,12 +38,14 @@ VALIDATE $? "Enabling the redis"
 dnf install redis -y &>>$LOG_FILE
 VALIDATE $? "Installing the redis"
 
+sed -i 's/127.0.0.1/0.0.0.0/g' /etc/redis/redis.conf
+sed -i 's/protectedmode:yes/protectedmode:no/g' /etc/redis/redis.conf
+
+systemctl restart redis &>>$LOG_FILE
+
 systemctl enable redis &>>$LOG_FILE
 VALIDATE $? "Enabling the redis"
 
 
-sed -i 's/127.0.0.1/0.0.0.0/g' /etc/redis/redis.conf
-sed -i 's/protectedmode:yes/protectedmode:no/g' /etc/redis/redis.conf
-systemctl restart redis &>>$LOG_FILE
 systemctl start redis &>>$LOG_FILE
 VALIDATE $? "Starting the redis"
