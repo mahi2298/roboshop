@@ -1,6 +1,7 @@
 #!/bin/bash
 USERID=$(id -u)
 
+START_TIME=$(date +%s)
 R="\e[31m"
 G="\e[32m"
 Y="\e[33m"
@@ -56,3 +57,8 @@ VALIDATE $? "Copying the nginx conf"
 
 systemctl restart nginx &>>$LOG_FILE
 VALIDATE $? "Restarting the nginx service"
+
+
+END_TIME=$(date +%s)
+TOTAL_TIME=$(($END_TIME-$START_TIME))
+echo "Script executed in $TOTAL_TIME seconds"
