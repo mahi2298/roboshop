@@ -10,10 +10,9 @@ START_TIME=$(date +%s)
 LOGS_FOLDER="/var/log/shellscript-logs"
 SCRIPT_NAME=$(echo $0 | cut -d "." -f1)
 LOG_FILE=$LOGS_FOLDER/$SCRIPT_NAME.logs
-SCRIPT_DIR=$PWD
 
 mkdir -p $LOGS_FOLDER
-echo "Script started execution at :: $(date)"
+echo "Script started execution at :: $(date)" | tee -a $LOG_FILE
 USERID=$(id -u)
 if [ $USERID -ne 0 ]
 then
@@ -33,15 +32,21 @@ VALIDATE(){
     fi
 }
 
+echo "Please enter root password to setup"
 read -s MYSQL_SERVER_PASSWORD
 
-dnf install mysql-server -y
+dnf install mysql-server -y &>>$LOG_FILE
 VALIDATE $? "Installing the mysql-server"
 
-systemctl enable mysqld
+systemctl enable mysqld &>>$LOG_FILE
 VALIDATE $? "Enabling the mysql-server"
 
-systemctl start mysqld  
+systemctl start mysqld &>>$LOG_FILE
 VALIDATE $? "Starting the mysql-server"
 
 mysql_secure_installation --set-root-pass $MYSQL_SERVER_PASSWORD
+VALIDATE $? "Setting up the password for mysql server"
+
+END_TIME=$(date +%s)
+TOTAL_TIME=$(($END_TIME-$START_TIME))
+echo "Script executed at :: $TOTAL_TIME seconds"
