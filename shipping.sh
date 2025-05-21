@@ -36,10 +36,10 @@ VALIDATE(){
     fi
 }
 
-dnf install maven -y
+dnf install maven -y &>>$LOG_FILE
 VALIDATE $? "Installing the maven"
 
-id roboshop
+id roboshop &>>$LOG_FILE
 if [ $? -ne 0 ]
 then
     useradd --system --home /app --sh /sbin/nologin --comment "Roboshop user" roboshop
@@ -51,38 +51,38 @@ fi
 mkdir -p /app
 VALIDATE $? "Creating the /app directory"
 
-curl -o /tmp/shipping.zip https://roboshop-artifacts.s3.amazonaws.com/shipping-v3.zip
+curl -o /tmp/shipping.zip https://roboshop-artifacts.s3.amazonaws.com/shipping-v3.zip &>>$LOG_FILE
 VALIDATE $? "Downloading the shipping file"
 
 rm -rf /app/*
 cd /app
-unzip /tmp/shipping.zip
+unzip /tmp/shipping.zip &>>$LOG_FILE
 VALIDATE $? "Unzipping the shipping file"
 
 
-mvn clean package
+mvn clean package &>>$LOG_FILE
 VALIDATE $? "Installing the maven dependencies"
 
-mv target/shipping-1.0.jar shipping.jar 
+mv target/shipping-1.0.jar shipping.jar  &>>$LOG_FILE
 VALIDATE $? "moving the shipping jar file to /app folder"
 
-cp $SCRIPT_DIR/shipping.service /etc/systemd/system/shipping.service
+cp $SCRIPT_DIR/shipping.service /etc/systemd/system/shipping.service &>>$LOG_FILE
 VALIDATE $? "Copying the shipping service file"
 
-systemctl daemon-reload
+systemctl daemon-reload &>>$LOG_FILE
 VALIDATE $? "Daemon-reload"
 
-systemctl enable shipping
+systemctl enable shipping &>>$LOG_FILE
 VALIDATE $? "Enabling the shipping service"
 
-systemctl start shipping
+systemctl start shipping &>>$LOG_FILE
 VALIDATE $? "Starting the shipping service"
 
-dnf install mysql -y 
+dnf install mysql -y &>>$LOG_FILE
 mysql -h mysql.pavithra.fun -uroot -p$MYSQL_SERVER_PASSWORD < /app/db/schema.sql
 mysql -h mysql.pavithra.fun -uroot -p$MYSQL_SERVER_PASSWORD < /app/db/app-user.sql 
 mysql -h mysql.pavithra.fun -uroot -p$MYSQL_SERVER_PASSWORD < /app/db/master-data.sql
 VALIDATE $? "Loading data into MySQL"
 
-systemctl restart shipping
+systemctl restart shipping &>>$LOG_FILE
 VALIDATE $? "restarting the shipping service"
