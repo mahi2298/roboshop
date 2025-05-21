@@ -1,6 +1,6 @@
 #!/bin/bash
 USERID=$(id -u)
-
+START_TIME=$(date +%s)
 R="\e[31m"
 G="\e[32m"
 Y="\e[33m"
@@ -41,7 +41,7 @@ VALIDATE $? "Installing the Nodejs"
 id roboshop
 if [ $? -ne 0 ]
 then
-    useradd --system --home /app --sh /sbin/nologin --comment "Roboshop user" roboshop
+    useradd --system --home /app --sh /sbin/nologin --comment "Roboshop user" roboshop &>>$LOG_FILE
     VALIDATE $? "Creating the Roboshop user"
 else
     echo "User is already created"
@@ -54,3 +54,7 @@ systemctl daemon-reload
 systemctl enable user &>>$LOG_FILE
 systemctl start user
 VALIDATE $? "Starting the user service"
+
+END_TIME=$(date +%s)
+TOTAL_TIME=$(($END_TIME-$START_TIME))
+echo "Script executed in $TOTAL_TIME seconds"
