@@ -9,6 +9,7 @@ LOGS_FOLDER="/var/log/shellscript-logs"
 SCRIPT_NAME=$(echo $0 | cut -d "." -f1)
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.logs"
 SCRIPT_DIR=$PWD
+
 mkdir -p $LOGS_FOLDER
 echo "Script started execution at:: $(date)"
 if [ $USERID -ne 0 ]
@@ -47,8 +48,22 @@ else
     echo "User is already created"
 fi
 
+mkdir -p /app
+VALIDATE $? "Creating the app directory"
+
+curl -o /tmp/user.zip https://roboshop-artifacts.s3.amazonaws.com/user-v3.zip &>>$LOG_FILE
+VALIDATE $? "Downloading the File"
+
+rm -rf /app/*
+cd /app
+unzip /tmp/user.zip
+VALIDATE $? "Unzipping the user File"
+
+npm install
+VALIDATE $? "Installing the dependencies"
+
 cp $SCRIPT_DIR/user.service /etc/systemd/system/user.service
-VALIDATE $? "Copying the service"
+VALIDATE $? "Copying the user service"
 
 systemctl daemon-reload
 systemctl enable user &>>$LOG_FILE
