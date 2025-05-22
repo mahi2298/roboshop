@@ -43,6 +43,9 @@ VALIDATE $? "Copying the repo file"
 dnf install rabbitmq-server -y &>>$LOG_FILE
 VALIDATE $? "Installing the rabbitMQ Server"
 
+dnf restart rabbitmq-server &>>$LOG_FILE
+VALIDATE $? "restarting the rabbitMQ Server"
+
 dnf enable rabbitmq-server &>>$LOG_FILE
 VALIDATE $? "Enabling the rabbitMQ Server"
 
