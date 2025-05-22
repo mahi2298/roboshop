@@ -43,18 +43,17 @@ VALIDATE $? "Copying the repo file"
 dnf install rabbitmq-server -y &>>$LOG_FILE
 VALIDATE $? "Installing the rabbitMQ Server"
 
-dnf restart rabbitmq-server &>>$LOG_FILE
+systemctl restart rabbitmq-server &>>$LOG_FILE
 VALIDATE $? "restarting the rabbitMQ Server"
 
-dnf enable rabbitmq-server &>>$LOG_FILE
+systemctl enable rabbitmq-server &>>$LOG_FILE
 VALIDATE $? "Enabling the rabbitMQ Server"
 
-dnf start rabbitmq-server &>>$LOG_FILE
+systemctl start rabbitmq-server &>>$LOG_FILE
 VALIDATE $? "Starting the rabbitMQ Server"
 
 rabbitmqctl add_user roboshop $RABBITMQ_SERVER_PASSWORD
 rabbitmqctl set_permissions -p / roboshop ".*" ".*" ".*"
-
 
 
 END_TIME=$(date +%s)
