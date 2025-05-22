@@ -40,13 +40,13 @@ VALIDATE(){
 cp rabbitmq.repo /etc/yum.repos.d/rabbitmq.repo
 VALIDATE $? "Copying the repo file"
 
-dnf install rabbitmq-server -y
+dnf install rabbitmq-server -y &>>$LOG_FILE
 VALIDATE $? "Installing the rabbitMQ Server"
 
-dnf enable rabbitmq-server
+dnf enable rabbitmq-server &>>$LOG_FILE
 VALIDATE $? "Enabling the rabbitMQ Server"
 
-dnf start rabbitmq-server
+dnf start rabbitmq-server &>>$LOG_FILE
 VALIDATE $? "Starting the rabbitMQ Server"
 
 rabbitmqctl add_user roboshop $RABBITMQ_SERVER_PASSWORD
