@@ -79,10 +79,18 @@ systemctl start shipping &>>$LOG_FILE
 VALIDATE $? "Starting the shipping service"
 
 dnf install mysql -y &>>$LOG_FILE
-mysql -h mysql.pavithra.fun -uroot -p$MYSQL_SERVER_PASSWORD < /app/db/schema.sql
-mysql -h mysql.pavithra.fun -uroot -p$MYSQL_SERVER_PASSWORD < /app/db/app-user.sql 
-mysql -h mysql.pavithra.fun -uroot -p$MYSQL_SERVER_PASSWORD < /app/db/master-data.sql
-VALIDATE $? "Loading data into MySQL"
+
+
+mysql -h mysql.pavithra.fun -u root -p$MYSQL_SERVER_PASSWORD -e 'use cities' &>>$LOG_FILE
+if [ $? -ne 0 ]
+then
+    mysql -h mysql.pavithra.fun -uroot -p$MYSQL_SERVER_PASSWORD < /app/db/schema.sql
+    mysql -h mysql.pavithra.fun -uroot -p$MYSQL_SERVER_PASSWORD < /app/db/app-user.sql 
+    mysql -h mysql.pavithra.fun -uroot -p$MYSQL_SERVER_PASSWORD < /app/db/master-data.sql
+    VALIDATE $? "Loading data into MySQL"
+else
+    echo "Data is already loaded ... $Y SKIPPING $N"
+fi
 
 systemctl restart shipping &>>$LOG_FILE
 VALIDATE $? "restarting the shipping service"
