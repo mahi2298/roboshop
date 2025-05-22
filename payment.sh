@@ -44,7 +44,6 @@ then
     VALIDATE $? "Creating the new user"
 else
     echo "User is already Created"
-    exit 1
 fi
 
 mkdir -p /app  &>>$LOG_FILE
