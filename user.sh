@@ -56,10 +56,10 @@ VALIDATE $? "Downloading the File"
 
 rm -rf /app/*
 cd /app
-unzip /tmp/user.zip
+unzip /tmp/user.zip &>>$LOG_FILE
 VALIDATE $? "Unzipping the user File"
 
-npm install
+npm install &>>$LOG_FILE
 VALIDATE $? "Installing the dependencies"
 
 cp $SCRIPT_DIR/user.service /etc/systemd/system/user.service
