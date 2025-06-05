@@ -1,7 +1,7 @@
 #!/bin/bash
 
 AMI_ID="ami-09c813fb71547fc4f"
-SECURITY_GROUP_ID="sg-0d0cbdbe953ca7105"
+SECURITY_GROUP_ID="sg-022f7b17166ca615f"
 HOSTED_ZONE_ID="Z07100922S6MUFRUIEXB8"
 DOMAIN_NAME="pavithra.fun"
 INSTANCE=("mongodb" "mysql" "redis" "rabbitMQ" "catalogue" "user" "cart" "shipping" "payment" "dispatch" "frontend")
